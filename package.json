@@ -1,0 +1,32 @@
+{
+  "name": "proxy-server",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./bin/www",
+  "scripts": {
+    "stop": "pm2 kill",
+    "test": "jest",
+    "start": "pm2 start",
+    "restart": "npm run stop && npm start",
+    "dev": "nodemon .",
+    "docker": "pm2-docker ./bin/www -x ---"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ayinla@bitbucket.org/ayinla/proxy-server.git"
+  },
+  "author": "Ayinla Abdulsalam <ayinlaabdulsalam@gmail.com> (https://thecodemercenary.com)",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "debug": "^2.6.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "description": "Proxy server using pure http",
+  "keywords": [
+    "Proxy",
+    "server"
+  ]
+}
