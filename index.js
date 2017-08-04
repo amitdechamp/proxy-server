@@ -25,21 +25,24 @@ const getOptions = (req) => {
 
 const proxy = (data, options, resp) => {
   let cont = '';
-  const proxy = http.request(options, (res) => {
+
+  const onProxyRes = (res) => {
     res.on('data', (chunk) => {
       cont += chunk;
     })
       .on('error', (err) => {
-        console.log('shit wtf', err);
+        debug('Error %o', err);
       })
       .on('end', () => {
-        resp.writeHead(res.statusCode, res.headers);//
+        resp.writeHead(res.statusCode, res.headers);
         resp.write(cont);
         resp.end();
       });
-  });
-  proxy.write(data);
-  proxy.end();
+  };
+
+  const proxyReq = http.request(options, onProxyRes);
+  proxyReq.write(data);
+  proxyReq.end();
 };
 
 const onRequest = (req, res) => {
@@ -61,4 +64,4 @@ const onRequest = (req, res) => {
 
 http.createServer(onRequest).listen(PORT);
 
-console.log(`PROXY SERVER STARTED ON PORT ${PORT}`);
+process.stdout.write(`PROXY SERVER STARTED ON PORT ${PORT}`);
