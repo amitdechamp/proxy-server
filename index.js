@@ -1,52 +1,40 @@
 #!/usr/bin/env node
 
-const http = require('http');
-const url = require('url');
-const queryString = require('querystring');
+// @flow
 
-const debug = require('debug')('Goro:server');
+const http = require('http');
+const axios = require('axios');
+
+const debug = require('debug')('proxy');
 
 const PORT = process.argv[2] || 8000;
 
-const getOptions = (req) => {
-  const parsed = url.parse(req.url);
-
-  return {
-
-    host: parsed.host,
-    port: parsed.port,
-    path: parsed.pathname,
-    params: parsed.query,
-    method: req.method.toUpperCase(),
-    headers: req.headers,
-
-  };
-};
-
-const proxy = (data, options, resp) => {
-  let cont = '';
+const proxy = (data, resp) => {
 
   const onProxyRes = (res) => {
-    res.on('data', (chunk) => {
-      cont += chunk;
-    })
-      .on('error', (err) => {
-        debug('Error %o', err);
-      })
-      .on('end', () => {
-        resp.writeHead(res.statusCode, res.headers);
-        resp.write(cont);
-        resp.end();
-      });
+    resp.write(res);
+    return resp.end();
   };
 
-  const proxyReq = http.request(options, onProxyRes);
-  proxyReq.write(data);
-  proxyReq.end();
+  const x = axios(data);
+
+  x.then(res => onProxyRes(JSON.stringify(res.data)))
+    .catch(onProxyRes);
+
 };
 
 const onRequest = (req, res) => {
-  const options = getOptions(req);
+
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Request-Method', '*');
+  res.setHeader('Access-Control-Allow-Methods', '*');
+  res.setHeader('Access-Control-Allow-Headers', "Origin, X-Requested-With, Content-Type, Accept");
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200);
+    res.end();
+    return;
+  }
 
   let data = "";
 
@@ -55,7 +43,7 @@ const onRequest = (req, res) => {
   };
 
   const onEnd = () => {
-    proxy(data, options, res);
+    return proxy(JSON.parse(data), res);
   };
 
   req.on('data', onData);
