@@ -1,29 +1,29 @@
 {
     "name": "proxy-server",
-    "version": "0.0.0",
-    "private": true,
-    "main": "./bin/www",
+    "version": "1.0.0",
+    "main": ".",
     "scripts": {
         "stop": "pm2 kill",
-        "test": "jest",
-        "start": "pm2 start",
-        "restart": "npm run stop && npm start",
-        "dev": "nodemon .",
-        "docker": "pm2-docker ./bin/www -x ---"
+        "test": "tape test | tap-spec",
+        "start": "pm2 start . --name proxy-server",
+        "restart": "yarn run stop && yarn start",
+        "dev": "nodemon ."
     },
     "repository": {
         "type": "git",
-        "url": "git+https://ayinla@bitbucket.org/ayinla/proxy-server.git"
+        "url": "git+https://github.com/ayinlaaji/proxy-server"
     },
     "author": "Ayinla Abdulsalam <ayinlaabdulsalam@gmail.com> (https://thecodemercenary.com)",
     "license": "UNLICENSED",
     "dependencies": {
+        "axios": "^0.17.0",
         "pm2": "^2.6.1"
     },
     "devDependencies": {
         "debug": "^2.6.8",
-        "jest-cli": "^20.0.4",
-        "nodemon": "^1.11.0"
+        "nodemon": "^1.11.0",
+        "tap-spec": "^4.1.1",
+        "tape": "^4.8.0"
     },
     "description": "Proxy server using pure http",
     "keywords": [
