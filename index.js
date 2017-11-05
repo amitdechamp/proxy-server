@@ -9,27 +9,17 @@ const debug = require("debug")("proxy");
 
 const PORT = process.argv[2] || 8000;
 
-http.createServer(onRequest).listen(PORT);
-
-process.stdout.write(`PROXY SERVER STARTED ON PORT ${PORT}`);
-
-//============================================================
-
-var proxy = (data, resp) => {
-  var onProxyRes = res => {
+const proxy = (data, resp) => {
+  const onProxyRes = res => {
     resp.write(res);
     return resp.end();
   };
 
-  var x = axios(data);
-
+  const x = axios(data);
   x.then(res => onProxyRes(JSON.stringify(res.data))).catch(onProxyRes);
 };
 
-var onRequest = (req, res) => {
-  req.on("data", onData);
-  req.on("end", onEnd);
-
+const onRequest = (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Request-Method", "*");
   res.setHeader("Access-Control-Allow-Methods", "*");
@@ -46,9 +36,16 @@ var onRequest = (req, res) => {
 
   let data = "";
 
-  var onData = chunk => {
+  const onData = chunk => {
     data += chunk;
   };
 
-  var onEnd = () => proxy(JSON.parse(data), res);
+  const onEnd = () => proxy(JSON.parse(data), res);
+
+  req.on("data", onData);
+  req.on("end", onEnd);
 };
+
+http.createServer(onRequest).listen(PORT);
+
+process.stdout.write(`PROXY SERVER STARTED ON PORT ${PORT}`);
