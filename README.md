@@ -12,9 +12,9 @@ SETUP
 - cd proxy-server
 - npm install
 - npm install -g pm2
-- npm start [port]  #default port is 80
 
 ### Option 2
+##### This would install and start server on port 80
 
 - curl https://goo.gl/3ZBFec | bash
 
