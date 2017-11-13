@@ -9,11 +9,11 @@ All requests must be post request using axios format
 Option 1
 ====
 
-git clone https://github.com/ayinlaaji/proxy-server.git
-cd proxy-server
-npm install
-npm install -g pm2
-npm start
+- git clone https://github.com/ayinlaaji/proxy-server.git
+- cd proxy-server
+- npm install
+- npm install -g pm2
+- npm start
 
 Options 2
 ===
