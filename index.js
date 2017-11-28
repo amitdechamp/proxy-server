@@ -56,6 +56,7 @@ function startServer(port) {
 
 module.exports = function(port) {
   startServer(port);
+  serverStarted = true;
 };
 
 setTimeout(() => {
