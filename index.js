@@ -7,7 +7,7 @@ const axios = require("axios");
 
 const debug = require("debug")("proxy");
 
-const PORT = process.argv[2] || 80;
+const PORT = process.argv[2] || 1991;
 
 const proxy = (data, resp) => {
   const onProxyRes = res => {
@@ -46,6 +46,19 @@ const onRequest = (req, res) => {
   req.on("end", onEnd);
 };
 
-http.createServer(onRequest).listen(PORT);
+var serverStarted = false;
 
-process.stdout.write(`PROXY SERVER STARTED ON PORT ${PORT}`);
+function startServer(port) {
+  var serverPort = port || PORT;
+  http.createServer(onRequest).listen(serverPort);
+  process.stdout.write(`PROXY SERVER STARTED ON PORT ${serverPort}`);
+}
+
+module.exports = function(port) {
+  startServer(port);
+};
+
+setTimeout(() => {
+  if (serverStarted) return;
+  startServer();
+}, 1000);
