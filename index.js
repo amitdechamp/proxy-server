@@ -7,7 +7,7 @@ const axios = require("axios");
 
 const debug = require("debug")("proxy");
 
-const PORT = process.argv[2] || 1991;
+const PORT = process.argv[2] || 80;
 
 const proxy = (data, resp) => {
   const onProxyRes = res => {
