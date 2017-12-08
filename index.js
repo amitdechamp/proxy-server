@@ -51,7 +51,6 @@ var serverStarted = false;
 function startServer(port) {
   var serverPort = port || PORT;
   http.createServer(onRequest).listen(serverPort);
-  process.stdout.write(`PROXY SERVER STARTED ON PORT ${serverPort}`);
 }
 
 module.exports = function(port) {
