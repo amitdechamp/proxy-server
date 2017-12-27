@@ -1,33 +1,28 @@
 {
-    "name": "proxy-server",
-    "version": "1.1.1",
-    "main": ".",
-    "scripts": {
-        "stop": "pm2 kill",
-        "test": "tape test | tap-spec",
-        "start": "pm2 start . --name proxy-server",
-        "restart": "yarn run stop && yarn start",
-        "dev": "nodemon ."
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ayinlaaji/proxy-server"
-    },
-    "author": "Ayinla Abdulsalam <ayinlaabdulsalam@gmail.com> (https://thecodemercenary.com)",
-    "license": "UNLICENSED",
-    "dependencies": {
-        "axios": "^0.17.0",
-        "pm2": "^2.6.1"
-    },
-    "devDependencies": {
-        "debug": "^2.6.8",
-        "nodemon": "^1.11.0",
-        "tap-spec": "^4.1.1",
-        "tape": "^4.8.0"
-    },
-    "description": "Proxy server using pure http",
-    "keywords": [
-        "Proxy",
-        "server"
-    ]
+  "name": "proxy-server",
+  "version": "1.1.1",
+  "main": ".",
+  "scripts": {
+    "stop": "pm2 kill",
+    "test": "tape test | tap-spec",
+    "start": "pm2 start . --name proxy-server",
+    "restart": "yarn run stop && yarn start",
+    "dev": "DEBUG=Proxy nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayinlaaji/proxy-server"
+  },
+  "author":
+    "Ayinla Abdulsalam <ayinlaabdulsalam@gmail.com> (https://thecodemercenary.com)",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "debug": "^2.6.8",
+    "nodemon": "^1.11.0",
+    "pm2": "^2.6.1",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.8.0"
+  },
+  "description": "Proxy server using pure http",
+  "keywords": ["Proxy", "server"]
 }

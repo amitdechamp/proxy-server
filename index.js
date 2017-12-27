@@ -1,64 +1,51 @@
 #!/usr/bin/env node
-
 // @flow
 
+//This proxy server works with only post requests
+//Data must send in json  in the format {options: {}, payload: {}}
+
 const http = require("http");
-const axios = require("axios");
-
-const debug = require("debug")("proxy");
-
+const https = require("https");
+const debug = require("debug")("Proxy");
 const PORT = process.argv[2] || 80;
 
-const proxy = (data, resp) => {
-  const onProxyRes = res => {
-    resp.write(res);
-    return resp.end();
-  };
+http.createServer(onRequest).listen(PORT);
 
-  const x = axios(data);
-  x.then(res => onProxyRes(JSON.stringify(res.data))).catch(onProxyRes);
-};
+function onRequest(request, response) {
+  debug("Incoming Request");
+  let dt = "";
 
-const onRequest = (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Request-Method", "*");
-  res.setHeader("Access-Control-Allow-Methods", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  request.on("data", onData).on("end", onEnd);
 
-  if (req.method === "OPTIONS") {
-    res.writeHead(200);
-    res.end();
-    return;
+  function onData(chunk) {
+    dt += chunk;
   }
 
-  let data = "";
+  function onEnd() {
+    //make proxy request
 
-  const onData = chunk => {
-    data += chunk;
-  };
+    const data = JSON.parse(dt);
+    debug("post data", data.options, data.payload);
 
-  const onEnd = () => proxy(JSON.parse(data), res);
+    let dat = "";
 
-  req.on("data", onData);
-  req.on("end", onEnd);
-};
+    const req = https.request(data.options, res => {
+      res
+        .on("data", chunk => {
+          dat += chunk;
+          debug("Data %s", chunk + "");
+        })
+        .on("end", () => {
+          debug("Data End %s", dat);
+          response.write(dat);
+          return response.end();
+        })
+        .on("error", err => {
+          debug("Error %o", err);
+        });
+    });
 
-var serverStarted = false;
-
-function startServer(port) {
-  var serverPort = port || PORT;
-  http.createServer(onRequest).listen(serverPort);
+    if (data.payload) req.write(data.payload);
+    req.end();
+  }
 }
-
-module.exports = function(port) {
-  startServer(port);
-  serverStarted = true;
-};
-
-setTimeout(() => {
-  if (serverStarted) return;
-  startServer();
-}, 1000);

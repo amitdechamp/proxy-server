@@ -1,6 +1,6 @@
 *.log
+test
 node_modules
 .DS_Store
 *.swp
 .env
-snippets.js
