@@ -45,7 +45,7 @@ function onRequest(request, response) {
         });
     });
 
-    if (data.payload) req.write(data.payload);
+    if (data.options.method.toLowerCase() === "post") req.write(data.payload);
     req.end();
   }
 }
